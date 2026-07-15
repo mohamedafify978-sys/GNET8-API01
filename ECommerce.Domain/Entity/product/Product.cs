@@ -12,15 +12,15 @@ namespace ECommerce.Domain.Entity.product
     {
         public String Name { get; set; } = null!;
         public String Description { get; set; } = null!;
-        public string ProductURL { get; set; } = null!;
+        public string PictureUrl { get; set; } = null!; 
         public decimal Price { get; set; }
         public ProductsBrand Brand { get; set; } = null!;
         [ForeignKey(nameof(Brand))]
-        public int BrandID { get; set; }
+        public int BrandId { get; set; }
 
         public ProductsType Type { get; set; } = null!;
         [ForeignKey(nameof(Type))]
-        public int TypeID { get; set; }
+        public int TypeId { get; set; }
 
     }
 }

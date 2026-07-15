@@ -1,0 +1,68 @@
+﻿using AutoMapper;
+using ECommerce.Application.Common;
+using ECommerce.Application.Contacts;
+using ECommerce.Application.DTOs.Products;
+using ECommerce.Domain.Contracts;
+using ECommerce.Domain.Entity.product;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ECommerce.Application.Service
+{
+    internal class ProductService : IproductService
+    {
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
+
+        public ProductService(IUnitOfWork unitOfWork ,IMapper mapper )
+        {
+            this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
+        }
+        public async Task<Result<IReadOnlyList<BrandDto>>> GetAllBrandsAsync(CancellationToken ct = default)
+        {
+            var brands = await unitOfWork.GetRepository<ProductsBrand , int>().GetAllAsync(ct);
+            //if (brands == null || !brands.Any())
+            //{
+            //    return Result<IReadOnlyList<BrandDto>>.Fail(new Error("No brands found."));
+            //}
+
+            var brandDtos = mapper.Map<IReadOnlyList<BrandDto>>(brands);
+            return  Result<IReadOnlyList<BrandDto>>.Ok(brandDtos);
+
+
+
+        }
+
+        public async Task<Result<IReadOnlyList<TypeDto>>> GetAllTypesAsync(CancellationToken ct = default)
+        {
+            var categories = await unitOfWork.GetRepository<ProductsType, int>().GetAllAsync(ct);
+            var categoryDtos = mapper.Map<IReadOnlyList<TypeDto>>(categories);
+            return Result<IReadOnlyList<TypeDto>>.Ok(categoryDtos);
+
+        }
+
+        public async Task<Result<IReadOnlyList<ProductDto>>> GetAllProductsAsync(CancellationToken ct = default)
+        {
+            var products = await unitOfWork.GetRepository<Product, int>().GetAllAsync(ct);
+            var productDtos = mapper.Map<IReadOnlyList<ProductDto>>(products);
+            return Result<IReadOnlyList<ProductDto>>.Ok(productDtos);
+
+        }
+
+        public async Task<Result<ProductDto>> GetProductByIdAsync(int id, CancellationToken ct = default)
+        {
+            var product =await unitOfWork.GetRepository<Product, int>().GetByIdAsync(id, ct);
+            if (product == null)
+            {
+                return Error.NotFound("Product not found.", $"Product with Id : {id} not found");
+            }
+            var productDto = mapper.Map<ProductDto>(product);
+            return productDto;
+
+        }
+    }
+}
