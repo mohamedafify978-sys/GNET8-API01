@@ -2,6 +2,7 @@
 using ECommerce.Application.Common;
 using ECommerce.Application.Contacts;
 using ECommerce.Application.DTOs.Products;
+using ECommerce.Application.Specifications;
 using ECommerce.Domain.Contracts;
 using ECommerce.Domain.Entity.product;
 using System;
@@ -18,6 +19,7 @@ namespace ECommerce.Application.Service
         private readonly IMapper mapper;
 
         public ProductService(IUnitOfWork unitOfWork ,IMapper mapper )
+
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
@@ -25,10 +27,6 @@ namespace ECommerce.Application.Service
         public async Task<Result<IReadOnlyList<BrandDto>>> GetAllBrandsAsync(CancellationToken ct = default)
         {
             var brands = await unitOfWork.GetRepository<ProductsBrand , int>().GetAllAsync(ct);
-            //if (brands == null || !brands.Any())
-            //{
-            //    return Result<IReadOnlyList<BrandDto>>.Fail(new Error("No brands found."));
-            //}
 
             var brandDtos = mapper.Map<IReadOnlyList<BrandDto>>(brands);
             return  Result<IReadOnlyList<BrandDto>>.Ok(brandDtos);
@@ -39,15 +37,18 @@ namespace ECommerce.Application.Service
 
         public async Task<Result<IReadOnlyList<TypeDto>>> GetAllTypesAsync(CancellationToken ct = default)
         {
-            var categories = await unitOfWork.GetRepository<ProductsType, int>().GetAllAsync(ct);
+            //var spec =  new ProductWithTypeAndBrandSpec();
+          
+            var categories = await unitOfWork.GetRepository<ProductsType, int>().GetAllAsync( ct);
             var categoryDtos = mapper.Map<IReadOnlyList<TypeDto>>(categories);
             return Result<IReadOnlyList<TypeDto>>.Ok(categoryDtos);
 
         }
 
-        public async Task<Result<IReadOnlyList<ProductDto>>> GetAllProductsAsync(CancellationToken ct = default)
+        public async Task<Result<IReadOnlyList<ProductDto>>> GetAllProductsAsync(Productqueryparams queryparam, CancellationToken ct = default)
         {
-            var products = await unitOfWork.GetRepository<Product, int>().GetAllAsync(ct);
+            var spec = new ProductWithTypeAndBrandSpec(queryparam);
+            var products = await unitOfWork.GetRepository<Product, int>().GetAllAsync(spec);
             var productDtos = mapper.Map<IReadOnlyList<ProductDto>>(products);
             return Result<IReadOnlyList<ProductDto>>.Ok(productDtos);
 
@@ -55,7 +56,8 @@ namespace ECommerce.Application.Service
 
         public async Task<Result<ProductDto>> GetProductByIdAsync(int id, CancellationToken ct = default)
         {
-            var product =await unitOfWork.GetRepository<Product, int>().GetByIdAsync(id, ct);
+            var spec = new ProductWithTypeAndBrandSpec(id);
+            var product =await unitOfWork.GetRepository<Product, int>().GetByIdAsync(spec, ct);
             if (product == null)
             {
                 return Error.NotFound("Product not found.", $"Product with Id : {id} not found");
