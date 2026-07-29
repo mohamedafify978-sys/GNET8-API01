@@ -5,7 +5,8 @@ using System.Security.Cryptography;
 
 namespace ECommerce.Api.Controllers
 {
-
+    [ApiController]
+    [Route("api/[controller]")]
     public class ApiBaseController : ControllerBase
     {
 
