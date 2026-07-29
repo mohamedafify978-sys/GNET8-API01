@@ -17,7 +17,7 @@ namespace ECommerce.Application
             // Register application services here
             services.AddAutoMapper(c=> { },typeof(ApplicationServiceRegistration).Assembly);
             services.AddScoped<IproductService, ProductService>();
-           
+            services.AddScoped<IbasketServices, BasketService>();
 
             return services;
         }

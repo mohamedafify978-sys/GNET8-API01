@@ -5,7 +5,7 @@ namespace ECommerce.Application.Contacts
 {
     public interface IproductService
     {
-        Task<Result<IReadOnlyList<ProductDto>>> GetAllProductsAsync(Productqueryparams queryparam, CancellationToken ct = default);
+        Task<Result<paginationResult<ProductDto>>> GetAllProductsAsync(Productqueryparams queryparam, CancellationToken ct = default);
         Task<Result<IReadOnlyList<BrandDto>>> GetAllBrandsAsync(CancellationToken ct=default);
         Task<Result<IReadOnlyList<TypeDto>>> GetAllTypesAsync(CancellationToken ct = default);
         Task<Result<ProductDto>> GetProductByIdAsync(int id, CancellationToken ct=default);
