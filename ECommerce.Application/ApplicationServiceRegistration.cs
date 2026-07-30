@@ -15,9 +15,12 @@ namespace ECommerce.Application
         public static IServiceCollection AddApplicationServicesAsync(this IServiceCollection services)
         {
             // Register application services here
-            services.AddAutoMapper(c=> { },typeof(ApplicationServiceRegistration).Assembly);
+            services.AddAutoMapper(c => { }, typeof(ApplicationServiceRegistration).Assembly);
             services.AddScoped<IproductService, ProductService>();
             services.AddScoped<IbasketServices, BasketService>();
+
+            services.AddSingleton<ICacheService, CacheService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return services;
         }
