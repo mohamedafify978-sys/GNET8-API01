@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.28" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
     <PackageReference Include="StackExchange.Redis" Version="3.0.17" />
+    <PackageReference Include="Stripe.net" Version="52.1.0" />
   </ItemGroup>
 
   <ItemGroup>

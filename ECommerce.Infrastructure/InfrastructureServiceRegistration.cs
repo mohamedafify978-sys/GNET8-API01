@@ -1,9 +1,11 @@
 ﻿using ECommerce.Application.Contacts;
+using ECommerce.Application.Service;
 using ECommerce.Domain.Contracts;
 using ECommerce.Infrastructure.Data;
 using ECommerce.Infrastructure.Identity.Data;
 using ECommerce.Infrastructure.Identity.Entities;
 using ECommerce.Infrastructure.Identity.Services;
+using ECommerce.Infrastructure.Payments;
 using ECommerce.Infrastructure.Repositorys;
 using ECommerce.Infrastructure.seeding;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -54,6 +56,10 @@ namespace ECommerce.Infrastructure
 
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<ITokenService, TokenService>();
+
+            // Stripe payment gateway
+            services.Configure<PaymentGatewaySettings>(configuration.GetSection("Stripe"));
+            services.AddSingleton<IPaymentGateway, StripePaymentGateway>();
 
             var jwtSettings = configuration.GetSection("Jwt").Get<JwtSettings>()
                 ?? throw new InvalidOperationException("Jwt settings section is missing in appsettings.json.");

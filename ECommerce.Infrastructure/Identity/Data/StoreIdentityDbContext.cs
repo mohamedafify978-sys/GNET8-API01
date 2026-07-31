@@ -19,6 +19,12 @@ namespace ECommerce.Infrastructure.Identity.Data
             builder.Entity<IdentityRole>().ToTable("Roles");
             builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
             builder.Entity<Address>().ToTable("Addresses");
+
+            builder.Entity<ApplicationUser>()
+                .HasOne(u => u.Address)
+                .WithOne(a => a.User)
+                .HasForeignKey<Address>(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
