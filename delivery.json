@@ -1,0 +1,20 @@
+[
+  {
+    "ShortName": "Standard",
+    "Description": "Delivery within 5-7 business days",
+    "DeliveryTime": "5-7 Days",
+    "Cost": 20.00
+  },
+  {
+    "ShortName": "Express",
+    "Description": "Delivery within 2-3 business days",
+    "DeliveryTime": "2-3 Days",
+    "Cost": 40.00
+  },
+  {
+    "ShortName": "Next Day",
+    "Description": "Delivery next business day",
+    "DeliveryTime": "1 Day",
+    "Cost": 60.00
+  }
+]
