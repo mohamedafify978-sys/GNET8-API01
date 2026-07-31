@@ -2,6 +2,7 @@ using ECommerce.Api.Extansions;
 using ECommerce.Application;
 using ECommerce.Application.Profiles;
 using ECommerce.Infrastructure;
+using ECommerce.Infrastructure.Identity.Services;
 using Microsoft.Extensions.FileProviders;
 namespace ECommerce.Api
 {
@@ -22,6 +23,7 @@ namespace ECommerce.Api
             builder.Services.AddApplicationServicesAsync();
 
             builder.Services.Configure<UrlSettings>(builder.Configuration.GetSection("UrlSettings"));
+            builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -47,6 +49,9 @@ namespace ECommerce.Api
             });
             app.UseHttpsRedirection();
 
+            // Must come BEFORE UseAuthorization, otherwise [Authorize] endpoints
+            // always return 401 because the request is never authenticated.
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

@@ -1,7 +1,7 @@
 ﻿using ECommerce.Application.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography;
+using System.Security.Claims;
 
 namespace ECommerce.Api.Controllers
 {
@@ -22,7 +22,7 @@ namespace ECommerce.Api.Controllers
                 return ToProblem(result.Errors);
 
             }
-           
+
         }
         public static ActionResult ToActionResult(Result result)
         {
@@ -52,9 +52,15 @@ namespace ECommerce.Api.Controllers
                 Status = statusCode,
                 Title = firstError.Code,
                 Detail = firstError.Description,
-                Extensions = { ["errors"] = errors}
+                Extensions = { ["errors"] = errors }
             };
-            return new ObjectResult(problemDetails) {StatusCode = statusCode};
+            return new ObjectResult(problemDetails) { StatusCode = statusCode };
         }
+
+        // Reads the email claim from the JWT that ASP.NET put on User after AddAuthentication validates it.
+        // Only works on actions marked [Authorize] where a valid Bearer token was sent.
+        protected string GetEmailFromToken()
+            => User.FindFirstValue(ClaimTypes.Email)
+               ?? throw new UnauthorizedAccessException("No email claim found in token.");
     }
 }
