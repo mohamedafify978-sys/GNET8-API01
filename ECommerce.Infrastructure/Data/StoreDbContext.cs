@@ -1,4 +1,5 @@
-﻿using ECommerce.Domain.Entity.product;
+﻿using ECommerce.Domain.Entity.orders;
+using ECommerce.Domain.Entity.product;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace ECommerce.Infrastructure.Data
         public DbSet<Product> products { get; set; }
         public DbSet<ProductsBrand> productsBrands { get; set; }
         public DbSet<ProductsType> productsTypes { get; set; }
+        public DbSet<Order> orders { get; set; }
+        public DbSet<DeliveryMethod> deliveryMethods { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
