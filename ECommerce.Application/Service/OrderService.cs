@@ -24,15 +24,12 @@ namespace ECommerce.Application.Service
             if (basket.Items.Count == 0)
                 return Result<OrderToReturnDto>.Fail(Error.Validation("Basket Is Empty", $"Can Not Create Order With Basket With Id {orderDto.BasketId}"));
 
-            if (string.IsNullOrEmpty(basket.PaymentIntentId))
-                return Result<OrderToReturnDto>.Fail(Error.Validation("Payment Intent Missing", "Basket Has No Payment Intent, Call The Payment Endpoint First"));
-
             var orderRepo = unitOfWork.GetRepository<Order, Guid>();
             var productRepo = unitOfWork.GetRepository<Product, int>();
 
-            // If the user goes back and edits the basket after a payment intent was already created,
-            // an order for that same PaymentIntentId may already exist - replace it instead of duplicating.
-            var existingOrder = await orderRepo.GetByIdAsync(new PaymentIntentSpec(basket.PaymentIntentId), ct);
+            // Matches the reference: looks up an existing order for this basket's PaymentIntentId
+            // (even if it's null) and replaces it, instead of requiring a PaymentIntentId up front.
+            var existingOrder = await orderRepo.GetByIdAsync(new PaymentIntentSpec(basket.PaymentIntentId!), ct);
             if (existingOrder is not null)
                 orderRepo.Delete(existingOrder, ct);
 
